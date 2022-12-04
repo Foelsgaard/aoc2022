@@ -21,6 +21,6 @@ fn main() {
         score2 += (b >= c && a <= d) as usize;
     }
 
-    println!("{}", score1);
-    println!("{}", score2);
+    println!("04a: {}", score1);
+    println!("04b: {}", score2);
 }

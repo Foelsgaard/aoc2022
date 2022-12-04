@@ -21,7 +21,7 @@ fn main() {
             }
         }
     }
-    println!("{}", score);
+    println!("03a: {}", score);
 
     let mut score = 0;
     let mut lines = contents.lines();
@@ -49,5 +49,5 @@ fn main() {
         }
     }
 
-    println!("{}", score);
+    println!("03b: {}", score);
 }

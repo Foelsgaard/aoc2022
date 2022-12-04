@@ -30,6 +30,6 @@ fn main() {
         score2 += s2;
     }
 
-    println!("{}", score1);
-    println!("{}", score2);
+    println!("02a: {}", score1);
+    println!("02b: {}", score2);
 }

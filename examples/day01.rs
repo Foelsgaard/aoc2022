@@ -18,6 +18,6 @@ fn main() {
     totals[0] = total;
     totals.sort();
 
-    println!("{}", totals[3]);
-    println!("{}", totals[1..].iter().sum::<usize>());
+    println!("01a: {}", totals[3]);
+    println!("01b: {}", totals[1..].iter().sum::<usize>());
 }

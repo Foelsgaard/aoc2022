@@ -87,7 +87,6 @@ fn print_solution(multi_move: bool, contents: &str) {
         let d = c + n;
 
         stack.copy_within(a..b, c);
-        stack[a..b].fill('\0');
 
         if !multi_move {
             stack[c..d].reverse();

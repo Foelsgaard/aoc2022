@@ -3,7 +3,14 @@ use aoc2022::get_input;
 fn main() {
     let contents = get_input();
 
-    let mut score = 0;
+    let (a, b) = solve(&contents);
+
+    println!("03a: {}", a);
+    println!("03b: {}", b);
+}
+
+fn solve(contents: &str) -> (usize, usize) {
+    let mut score1 = 0;
 
     for line in contents.lines() {
         let n = line.len();
@@ -15,15 +22,14 @@ fn main() {
             if b.contains(c) {
                 let pri = (c as u8).checked_sub(96).unwrap_or((c as u8) - 38) as usize;
                 if !checklist[pri - 1] {
-                    score += pri;
+                    score1 += pri;
                     checklist[pri - 1] = true;
                 }
             }
         }
     }
-    println!("03a: {}", score);
 
-    let mut score = 0;
+    let mut score2 = 0;
     let mut lines = contents.lines();
 
     loop {
@@ -42,12 +48,27 @@ fn main() {
                 let pri = (ch as u8).checked_sub(96).unwrap_or((ch as u8) - 38) as usize;
 
                 if !checklist[pri - 1] {
-                    score += pri;
+                    score2 += pri;
                     checklist[pri - 1] = true;
                 }
             }
         }
     }
 
-    println!("03b: {}", score);
+    (score1, score2)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_solution() {
+        let contents = include_str!("../input/day03");
+
+        let (a, b) = solve(&contents);
+
+        assert_eq!(a, 7795);
+        assert_eq!(b, 2703);
+    }
 }

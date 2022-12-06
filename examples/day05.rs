@@ -2,14 +2,16 @@ use aoc2022::get_input;
 
 fn main() {
     let contents = get_input();
+    let buffer = &mut [0; 0x10];
 
-    print!("05a: ");
-    print_solution(false, &contents);
-    print!("05b: ");
-    print_solution(true, &contents);
+    let a = solve(false, &contents, buffer);
+    println!("05a: {}", a);
+
+    let b = solve(true, &contents, buffer);
+    println!("05b: {}", b);
 }
 
-fn print_solution(multi_move: bool, contents: &str) {
+fn solve<'a>(multi_move: bool, contents: &str, buffer: &'a mut [u8]) -> &'a str {
     const STACK_MAX_WIDTH: usize = 0x10;
     const STACK_MAX_HEIGHT: usize = 0x200;
 
@@ -99,7 +101,26 @@ fn print_solution(multi_move: bool, contents: &str) {
     for i in 0..stack_width {
         let n = stack_len[i];
         let ch = stack[STACK_MAX_HEIGHT * i + n - 1];
-        print!("{}", ch);
+
+        buffer[i] = ch as u8;
     }
-    println!();
+
+    std::str::from_utf8(&buffer[..stack_width]).unwrap()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_solution() {
+        let contents = include_str!("../input/day05");
+        let buffer = &mut [0; 0x10];
+
+        let a = solve(false, &contents, buffer);
+        assert_eq!(a, "JCMHLVGMG");
+
+        let b = solve(true, &contents, buffer);
+        assert_eq!(b, "LVMRWSSPZ");
+    }
 }

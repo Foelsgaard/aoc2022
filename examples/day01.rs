@@ -3,6 +3,13 @@ use aoc2022::get_input;
 fn main() {
     let contents = get_input();
 
+    let (a, b) = solve(&contents);
+
+    println!("01a: {}", a);
+    println!("01b: {}", b);
+}
+
+fn solve(contents: &str) -> (usize, usize) {
     let mut totals = [0, 0, 0, 0];
     let mut total = 0;
 
@@ -18,6 +25,23 @@ fn main() {
     totals[0] = total;
     totals.sort();
 
-    println!("01a: {}", totals[3]);
-    println!("01b: {}", totals[1..].iter().sum::<usize>());
+    let a = totals[3];
+    let b = totals[1..].iter().sum();
+
+    (a, b)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_solution() {
+        let contents = include_str!("../input/day01");
+
+        let (a, b) = solve(&contents);
+
+        assert_eq!(a, 72718);
+        assert_eq!(b, 213089);
+    }
 }

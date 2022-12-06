@@ -3,8 +3,11 @@ use aoc2022::get_input;
 fn main() {
     let contents = get_input();
 
-    println!("06a: {}", solve(&contents, 4));
-    println!("06b: {}", solve(&contents, 14));
+    let a = solve(&contents, 4);
+    let b = solve(&contents, 14);
+
+    println!("06a: {}", a);
+    println!("06b: {}", b);
 }
 
 fn solve(contents: &str, marker_size: usize) -> usize {
@@ -37,4 +40,20 @@ fn solve(contents: &str, marker_size: usize) -> usize {
     }
 
     j
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_solution() {
+        let contents = include_str!("../input/day06");
+
+        let a = solve(&contents, 4);
+        let b = solve(&contents, 14);
+
+        assert_eq!(a, 1287);
+        assert_eq!(b, 3716);
+    }
 }

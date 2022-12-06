@@ -1,3 +1,7 @@
+#![cfg_attr(test, feature(test))]
+#[cfg(test)]
+extern crate test;
+
 use aoc2022::get_input;
 
 fn main() {
@@ -64,11 +68,24 @@ mod tests {
 
     #[test]
     fn test_solution() {
-        let contents = include_str!("../input/day03");
+        let contents = include_str!("../../input/day03");
 
-        let (a, b) = solve(&contents);
+        let (a, b) = solve(contents);
 
         assert_eq!(a, 7795);
         assert_eq!(b, 2703);
+    }
+}
+
+#[cfg(test)]
+mod benches {
+    use super::*;
+    use test::Bencher;
+
+    #[bench]
+    fn bench_solution(bencher: &mut Bencher) {
+        let contents = include_str!("../../input/day03");
+
+        bencher.iter(|| solve(contents));
     }
 }

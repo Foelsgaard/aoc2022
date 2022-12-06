@@ -1,3 +1,8 @@
+#![cfg_attr(test, feature(test))]
+
+#[cfg(test)]
+extern crate test;
+
 use std::io::Read;
 use std::{env, fs};
 

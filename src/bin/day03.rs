@@ -14,49 +14,68 @@ fn main() {
 }
 
 fn solve(contents: &str) -> (usize, usize) {
-    let mut score1 = 0;
+    let mut count = [0; 256];
+    let mut checklist = [false; 256];
 
+    let mut score1 = 0;
     for line in contents.lines() {
         let n = line.len();
-        let mut checklist = [false; 52];
-
         let (a, b) = line.split_at(n / 2);
 
-        for c in a.chars() {
-            if b.contains(c) {
-                let pri = (c as u8).checked_sub(96).unwrap_or((c as u8) - 38) as usize;
-                if !checklist[pri - 1] {
-                    score1 += pri;
-                    checklist[pri - 1] = true;
-                }
+        for byte in a.as_bytes() {
+            checklist[*byte as usize] = true;
+        }
+
+        for byte in b.as_bytes() {
+            if checklist[*byte as usize] {
+                count[*byte as usize] += 1;
+                break;
             }
         }
+
+        checklist.fill(false);
     }
 
+    for (ch, n) in count.iter().enumerate().skip(38) {
+        let pri = (ch as u8).checked_sub(96).unwrap_or((ch as u8) - 38) as usize;
+
+        score1 += pri * n;
+    }
+
+    count.fill(0);
+
+    let mut checklist = [0_u8; 256];
     let mut score2 = 0;
     let mut lines = contents.lines();
 
-    loop {
-        let mut checklist = [false; 52];
-
-        let a = if let Some(line) = lines.next() {
-            line
-        } else {
-            break;
-        };
+    while let Some(a) = lines.next() {
         let b = lines.next().unwrap();
         let c = lines.next().unwrap();
 
-        for ch in a.chars() {
-            if b.contains(ch) && c.contains(ch) {
-                let pri = (ch as u8).checked_sub(96).unwrap_or((ch as u8) - 38) as usize;
+        for byte in a.as_bytes() {
+            checklist[*byte as usize] = 1;
+        }
 
-                if !checklist[pri - 1] {
-                    score2 += pri;
-                    checklist[pri - 1] = true;
-                }
+        for byte in b.as_bytes() {
+            if checklist[*byte as usize] == 1 {
+                checklist[*byte as usize] = 2;
             }
         }
+
+        for byte in c.as_bytes() {
+            if checklist[*byte as usize] == 2 {
+                count[*byte as usize] += 1;
+                break;
+            }
+        }
+
+        checklist.fill(0);
+    }
+
+    for (ch, n) in count.iter().enumerate().skip(38) {
+        let pri = (ch as u8).checked_sub(96).unwrap_or((ch as u8) - 38) as usize;
+
+        score2 += pri * n;
     }
 
     (score1, score2)

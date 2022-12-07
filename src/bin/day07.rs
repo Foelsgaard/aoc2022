@@ -14,24 +14,34 @@ fn main() {
 }
 
 fn solve(contents: &str) -> (usize, usize) {
-    let mut lines = contents.lines().peekable();
+    let mut lines = contents.lines();
     lines.next();
     
-    let mut total_size = 0;
-    let root_size = dir_size(&mut lines, "/", 0, &mut total_size, &mut 0);
+    let mut score1 = 0;
+    let root_size = traverse(&mut lines, "/", &mut |size| {
+        if size <= 100_000 {
+            score1 += size;
+        }
+    });
 
-    let mut lines = contents.lines().peekable();
+    let mut lines = contents.lines();
     lines.next();
 
-    let mut deletable = usize::MAX;
+    let mut score2 = usize::MAX;
     let free_space = 70_000_000 - root_size;
-    dir_size(&mut lines, "/", free_space, &mut 0, &mut deletable);
+    traverse(&mut lines, "/", &mut |size| {
+        if size + free_space >= 30_000_000 && score2 > size {
+            score2 = size;
+        }
+    });
 
-    (total_size, deletable)
+    (score1, score2)
 }
 
-fn dir_size<'a, I>(lines: &mut I, _dir: &str, free_space: usize, total_size: &mut usize, deletable: &mut usize) -> usize
-where I: Iterator<Item = &'a str> {
+fn traverse<'a, I, F>(lines: &mut I, _dir: &str, f: &mut F) -> usize
+where 
+    I: Iterator<Item = &'a str>,
+    F: FnMut(usize) {
     let mut size = 0;
 
     while let Some(line) = lines.next() {
@@ -42,24 +52,18 @@ where I: Iterator<Item = &'a str> {
                         break;
                     }
                     _ => {
-                        size += dir_size(lines, new_dir, free_space, total_size, deletable);
+                        size += traverse(lines, new_dir, f);
                     }
                 }
             }
-        } else if let Some(_) = line.strip_prefix("dir ") {
+        } else if line.strip_prefix("dir ").is_some() {
         } else {
             let (file_size, _file_name) = line.split_once(' ').unwrap();
             size += file_size.parse::<usize>().unwrap();
         }
     }
 
-    if size <= 100_000 {
-        *total_size += size;
-    }
-
-    if size + free_space >= 30_000_000 && *deletable > size {
-        *deletable = size;
-    }
+    f(size);
 
     size
 }

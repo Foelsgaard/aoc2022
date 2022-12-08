@@ -16,7 +16,7 @@ fn main() {
 fn solve(contents: &str) -> (usize, usize) {
     let mut lines = contents.lines();
     lines.next();
-    
+
     let mut score1 = 0;
     let root_size = traverse(&mut lines, "/", &mut |size| {
         if size <= 100_000 {
@@ -39,9 +39,10 @@ fn solve(contents: &str) -> (usize, usize) {
 }
 
 fn traverse<'a, I, F>(lines: &mut I, _dir: &str, f: &mut F) -> usize
-where 
+where
     I: Iterator<Item = &'a str>,
-    F: FnMut(usize) {
+    F: FnMut(usize),
+{
     let mut size = 0;
 
     while let Some(line) = lines.next() {
@@ -92,8 +93,6 @@ mod benches {
     fn bench_solution(bencher: &mut Bencher) {
         let contents = include_str!("../../input/day07");
 
-        bencher.iter(|| {
-            solve(contents)
-        });
+        bencher.iter(|| solve(contents));
     }
 }

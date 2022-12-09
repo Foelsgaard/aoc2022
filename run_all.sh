@@ -8,3 +8,4 @@
 ./target/release/day06 input/day06
 ./target/release/day07 input/day07
 ./target/release/day08 input/day08
+./target/release/day09 input/day09

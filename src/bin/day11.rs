@@ -7,37 +7,32 @@ use aoc2022::get_input;
 fn main() {
     let contents = get_input();
 
-    let a = solve(&contents, 20, true);
-    let b = solve(&contents, 10000, false);
+    let a = solve::<true>(&contents, 20);
+    let b = solve::<false>(&contents, 10000);
 
     println!("11a: {}", a);
     println!("11b: {}", b);
 }
 
 #[derive(Clone, Copy)]
-enum Arg {
-    Const(usize),
-    Old,
-}
-
-#[derive(Clone, Copy)]
 enum Op {
-    Add(Arg),
-    Mul(Arg),
+    Add(usize),
+    Mul(usize),
+    Square,
 }
 
 impl Default for Op {
     fn default() -> Op {
-        Op::Add(Arg::Const(0))
+        Op::Add(0)
     }
 }
 
-fn solve(contents: &str, rounds: usize, decrease_worry: bool) -> usize {
-    const MAX_QUEUE_LENGTH: usize = 0x40;
-    const MAX_NUM_QUEUES: usize = 0x10;
+const MAX_QUEUE_LENGTH: usize = 0x20;
+const MAX_NUM_QUEUES: usize = 0x10;
+
+fn solve<const DECREASE_WORRY: bool>(contents: &str, rounds: usize) -> usize {
     let mut queues = [[0; MAX_QUEUE_LENGTH]; MAX_NUM_QUEUES];
     let mut lengths = [0; MAX_NUM_QUEUES];
-    let mut starts = [0; MAX_NUM_QUEUES];
     let mut divisors = [0; MAX_NUM_QUEUES];
     let mut operations = [Op::default(); MAX_NUM_QUEUES];
     let mut targets = [0; MAX_NUM_QUEUES * 2];
@@ -68,14 +63,12 @@ fn solve(contents: &str, rounds: usize, decrease_worry: bool) -> usize {
             .split_ascii_whitespace();
 
         let op_str = op_parts.next().unwrap();
-        let right = match op_parts.next().unwrap() {
-            "old" => Arg::Old,
-            x => Arg::Const(x.parse::<usize>().unwrap()),
-        };
+        let right_str = op_parts.next().unwrap();
 
-        let op = match op_str {
-            "+" => Op::Add(right),
-            "*" => Op::Mul(right),
+        let op = match (op_str, right_str) {
+            ("+", _) => Op::Add(right_str.parse().unwrap()),
+            ("*", "old") => Op::Square,
+            ("*", _) => Op::Mul(right_str.parse().unwrap()),
             _ => panic!(),
         };
 
@@ -119,23 +112,16 @@ fn solve(contents: &str, rounds: usize, decrease_worry: bool) -> usize {
 
     for _round in 0..rounds {
         for i in 0..n {
-            let a = starts[i];
-            let b = a + lengths[i];
-
             for j in 0..lengths[i] {
-                let item = queues[i][a..b][j];
-                starts[i] += 1;
-                lengths[i] -= 1;
-                activity[i] += 1;
+                let item = queues[i][j];
 
                 let mut new_item = match operations[i] {
-                    Op::Add(Arg::Old) => item + item,
-                    Op::Add(Arg::Const(x)) => item + x,
-                    Op::Mul(Arg::Old) => item * item,
-                    Op::Mul(Arg::Const(x)) => item * x,
+                    Op::Add(x) => item + x,
+                    Op::Mul(x) => item * x,
+                    Op::Square => item * item,
                 };
 
-                if decrease_worry {
+                if DECREASE_WORRY {
                     new_item /= 3;
                 }
                 new_item %= modulus;
@@ -143,23 +129,17 @@ fn solve(contents: &str, rounds: usize, decrease_worry: bool) -> usize {
 
                 let tgt = targets[i * 2 + divisible as usize];
 
-                if starts[tgt] + lengths[tgt] + 1 > MAX_QUEUE_LENGTH {
-                    let c = starts[tgt];
-                    let d = c + lengths[tgt];
-                    queues[tgt].copy_within(c..d, 0);
-                    starts[tgt] = 0;
-                }
-                
-                queues[tgt][starts[tgt] + lengths[tgt]] = new_item;
+                queues[tgt][lengths[tgt]] = new_item;
                 lengths[tgt] += 1;
             }
+
+            activity[i] += lengths[i];
+            lengths[i] = 0;
         }
     }
 
     activity[..n].sort();
-    let score1 = activity[n - 2..n].iter().copied().product();
-
-    score1
+    activity[n - 2] * activity[n - 1]
 }
 
 #[cfg(test)]
@@ -170,8 +150,8 @@ mod tests {
     fn test_solution() {
         let contents = include_str!("../../input/day11");
 
-        let a = solve(&contents, 20, true);
-        let b = solve(&contents, 10000, false);
+        let a = solve::<true>(&contents, 20);
+        let b = solve::<false>(&contents, 10000);
 
         assert_eq!(a, 120056);
         assert_eq!(b, 21816744824);
@@ -188,8 +168,8 @@ mod benches {
         let contents = include_str!("../../input/day11");
 
         bencher.iter(|| {
-            solve(&contents, 20, true);
-            solve(&contents, 10000, false);
+            solve::<true>(&contents, 20);
+            solve::<false>(&contents, 10000);
         });
     }
 }

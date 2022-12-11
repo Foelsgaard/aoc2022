@@ -26,18 +26,18 @@ fn solve<'a>(contents: &str, out_buf: &'a mut [u8]) -> (isize, &'a str) {
     let mut inc_score = |cycle: usize, x: isize| {
         let row = (cycle - 1) / 40;
         let col = (cycle - 1) % 40;
-        if (x-1..=x+1).contains(&(col as isize)) {
+        if (x - 1..=x + 1).contains(&(col as isize)) {
             let letter = &mut letters[col / 5];
             let bit = row * 5 + col % 5;
             *letter |= 1 << bit;
-        } 
+        }
         if [20, 60, 100, 140, 180, 220].contains(&cycle) {
             score += x * (cycle as isize);
         }
     };
 
     inc_score(cycle, x);
-    
+
     for line in lines {
         if line.starts_with("noop") {
             cycle += 1;
@@ -45,7 +45,11 @@ fn solve<'a>(contents: &str, out_buf: &'a mut [u8]) -> (isize, &'a str) {
             continue;
         }
 
-        let n = line.strip_prefix("addx ").unwrap().parse::<isize>().unwrap();
+        let n = line
+            .strip_prefix("addx ")
+            .unwrap()
+            .parse::<isize>()
+            .unwrap();
 
         cycle += 1;
         inc_score(cycle, x);
@@ -69,7 +73,7 @@ fn solve<'a>(contents: &str, out_buf: &'a mut [u8]) -> (isize, &'a str) {
             }
         };
 
-        out_buf[i] = ch as u8; 
+        out_buf[i] = ch as u8;
     }
 
     let display = std::str::from_utf8(&out_buf[..8]).unwrap();

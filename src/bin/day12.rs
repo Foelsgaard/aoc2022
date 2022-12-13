@@ -48,16 +48,8 @@ fn solve(contents: &str) -> (usize, usize) {
             }
         });
 
-    let score1 = least_steps(&grid, width, height, starti, endi);
-
-    let mut score2 = usize::MAX;
-    for starti in &pot_starts[..pot_start_len] {
-        let n = least_steps(&grid, width, height, *starti, endi);
-
-        if n < score2 {
-            score2 = n;
-        }
-    }
+    let score1 = least_steps::<false>(&grid, width, height, starti, endi, 0);
+    let score2 = least_steps::<true>(&grid, width, height, starti, endi, b'a');
 
     (score1, score2)
 }
@@ -145,30 +137,41 @@ impl<K: Ord + Default + Copy + core::fmt::Debug, V: Default + Copy + core::fmt::
     }
 }
 
-fn least_steps(grid: &[u8], width: usize, height: usize, starti: usize, endi: usize) -> usize {
+fn least_steps<const BFS: bool>(
+    grid: &[u8],
+    width: usize,
+    height: usize,
+    starti: usize,
+    endi: usize,
+    target: u8,
+) -> usize {
     let heu = |x0, y0, x1, y1| {
         let dx: isize = x0 - x1;
         let dy: isize = y0 - y1;
         (dx.abs() + dy.abs()) as usize
     };
 
-    let x0 = (starti % width) as isize;
-    let y0 = (starti / width) as isize;
-    let x1 = (endi % width) as isize;
-    let y1 = (endi / width) as isize;
+    let x0 = (endi % width) as isize;
+    let y0 = (endi / width) as isize;
+    let x1 = (starti % width) as isize;
+    let y1 = (starti / width) as isize;
 
     let mut came_from = [usize::MAX; GRID_SIZE];
     let mut g_score = [usize::MAX; GRID_SIZE];
     let mut f_score = [usize::MAX; GRID_SIZE];
 
-    g_score[starti] = 0;
-    f_score[starti] = heu(x0, y0, x1, y1);
+    g_score[endi] = 0;
+    if !BFS {
+        f_score[endi] = heu(x0, y0, x1, y1);
+    }
 
     let mut set = [usize::MAX; 0x2000];
     let mut queue = MinHeap::new();
 
-    queue.insert(f_score[starti], starti);
-    lookup_insert(&mut set, starti, starti);
+    queue.insert(f_score[endi], endi);
+    lookup_insert(&mut set, endi, endi);
+
+    let mut insertion_order = 0;
 
     let mut current;
 
@@ -184,7 +187,7 @@ fn least_steps(grid: &[u8], width: usize, height: usize, starti: usize, endi: us
 
         lookup_insert(&mut set, current, usize::MAX);
 
-        if current == endi {
+        if BFS && grid[current] == target || current == starti {
             break;
         }
 
@@ -203,7 +206,7 @@ fn least_steps(grid: &[u8], width: usize, height: usize, starti: usize, endi: us
             }
 
             let next = (ny * (width as isize) + nx) as usize;
-            if grid[current] < grid[next] && grid[next] - grid[current] > 1 {
+            if grid[next] < grid[current] && grid[current] - grid[next] > 1 {
                 continue;
             }
 
@@ -211,20 +214,27 @@ fn least_steps(grid: &[u8], width: usize, height: usize, starti: usize, endi: us
             if tentative_g_score < g_score[next] {
                 came_from[next] = current;
                 g_score[next] = tentative_g_score;
-                f_score[next] = tentative_g_score + heu(nx, ny, x1, y1);
+                if !BFS {
+                    f_score[next] = tentative_g_score + heu(nx, ny, x1, y1);
+                }
 
                 if lookup_insert(&mut set, next, next) == next {
                     continue 'n_loop;
                 }
 
-                queue.insert(f_score[next], next);
+                if BFS {
+                    queue.insert(insertion_order, next);
+                    insertion_order += 1;
+                } else {
+                    queue.insert(f_score[next], next);
+                }
             }
         }
     }
 
     let mut steps = 0;
 
-    while current != starti {
+    while current != endi {
         current = came_from[current];
         steps += 1;
     }

@@ -12,3 +12,4 @@
 ./target/release/day10 input/day10
 ./target/release/day11 input/day11
 ./target/release/day12 input/day12
+./target/release/day13 input/day13

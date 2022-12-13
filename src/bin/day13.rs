@@ -46,7 +46,7 @@ fn solve(contents: &str) -> (usize, usize) {
         len += 1;
     }
 
-    buf[..len].sort_by(|line0, line1| {
+    buf[..len].sort_unstable_by(|line0, line1| {
         let mut tokens0 = Tokenizer::tokenize(line0);
         let mut tokens1 = Tokenizer::tokenize(line1);
 

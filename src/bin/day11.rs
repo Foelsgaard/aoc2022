@@ -138,7 +138,7 @@ fn solve<const DECREASE_WORRY: bool>(contents: &str, rounds: usize) -> usize {
         }
     }
 
-    activity[..n].sort();
+    activity[..n].sort_unstable();
     activity[n - 2] * activity[n - 1]
 }
 

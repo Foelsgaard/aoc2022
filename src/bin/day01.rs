@@ -20,14 +20,14 @@ fn solve(contents: &str) -> (usize, usize) {
     for line in contents.lines() {
         if line.is_empty() {
             totals[0] = total;
-            totals.sort();
+            totals.sort_unstable();
             total = 0;
             continue;
         }
         total += line.parse::<usize>().unwrap();
     }
     totals[0] = total;
-    totals.sort();
+    totals.sort_unstable();
 
     let a = totals[3];
     let b = totals[1..].iter().sum();

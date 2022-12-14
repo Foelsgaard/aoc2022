@@ -13,7 +13,7 @@ fn main() {
     println!("12b: {}", b);
 }
 
-const GRID_SIZE: usize = 0x1400;
+const GRID_SIZE: usize = 0x2000;
 
 fn solve(contents: &str) -> (usize, usize) {
     let mut grid = [0_u8; GRID_SIZE];

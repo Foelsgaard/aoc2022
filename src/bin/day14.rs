@@ -7,10 +7,10 @@ use aoc2022::get_input;
 fn main() {
     let contents = get_input();
 
-    //let a = solve::<false>(&contents);
+    let a = solve::<false>(&contents);
     let b = solve::<true>(&contents);
 
-    //println!("14a: {}", a);
+    println!("14a: {}", a);
     println!("14b: {}", b);
 }
 

@@ -7,10 +7,10 @@ use aoc2022::get_input;
 fn main() {
     let contents = get_input();
 
-    let a = solve::<false>(&contents);
+    //let a = solve::<false>(&contents);
     let b = solve::<true>(&contents);
 
-    println!("14a: {}", a);
+    //println!("14a: {}", a);
     println!("14b: {}", b);
 }
 
@@ -26,8 +26,8 @@ enum Tile {
 
 fn solve<const FLOOR: bool>(contents: &str) -> usize {
     let mut grid = [Tile::Air; GRID_WIDTH * GRID_HEIGHT];
-    let mut minx = [500, 0];
-    let mut maxx = [500, 0];
+    let mut minx = [480, 0];
+    let mut maxx = [520, 0];
 
     let lines = contents.lines();
 
@@ -79,43 +79,82 @@ fn solve<const FLOOR: bool>(contents: &str) -> usize {
     }
 
     let mut score = 0;
+    let start_ix = (500 - minx[0]) as usize;
+    let max_ix = (maxx[1] + 1) as usize * GRID_WIDTH;
+    let max_row = (maxx[1] + 2) as usize;
 
     'outer: loop {
-        let mut x = [500, 0];
+        let mut ix = start_ix;
+        let mut row = 0;
+
+        let mut dcount = 0;
+        let mut lcount = 0;
+        let mut rcount = 0;
 
         loop {
-            let down = [x[0], x[1] + 1];
-            let left = [x[0] - 1, x[1] + 1];
-            let right = [x[0] + 1, x[1] + 1];
+            let down = ix + GRID_WIDTH;
+            let left = ix + GRID_WIDTH - 1;
+            let right = ix + GRID_WIDTH + 1;
 
-            if FLOOR && down[1] == maxx[1] + 2 {
-                let ix = sub2ind(x, minx);
+            row += 1;
+
+            if FLOOR && row == max_row {
                 grid[ix] = Tile::Sand;
                 score += 1;
                 break;
             }
 
-            let down_ix = sub2ind(down, minx);
-            let left_ix = sub2ind(left, minx);
-            let right_ix = sub2ind(right, minx);
+            let down_free = matches!(grid[down], Tile::Air);
+            let left_free = matches!(grid[left], Tile::Air);
+            let right_free = matches!(grid[right], Tile::Air);
 
-            if matches!(grid[down_ix], Tile::Air) {
-                x = down;
-            } else if matches!(grid[left_ix], Tile::Air) {
-                x = left;
-            } else if matches!(grid[right_ix], Tile::Air) {
-                x = right;
-            } else {
-                let ix = sub2ind(x, minx);
+            if right_free {
+                dcount = 0;
+                lcount = 0;
+                rcount += 1;
+                ix = right;
+            }
+
+            if left_free {
+                dcount = 0;
+                lcount += 1;
+                rcount = 0;
+                ix = left;
+            }
+
+            if down_free {
+                dcount += 1;
+                lcount = 0;
+                rcount = 0;
+                ix = down;
+            }
+
+            if !right_free && !left_free && !down_free {
                 grid[ix] = Tile::Sand;
                 score += 1;
-                if FLOOR && x == [500, 0] {
+                if FLOOR && ix == start_ix {
                     break 'outer;
+                }
+
+                for _ in 0..rcount - 1 {
+                    ix -= GRID_WIDTH + 1;
+                    grid[ix] = Tile::Sand;
+                    score += 1;
+                }
+                for _ in 0..lcount - 1 {
+                    ix -= GRID_WIDTH - 1;
+                    grid[ix] = Tile::Sand;
+                    score += 1;
+                }
+                for _ in 0..dcount - 1 {
+                    ix -= GRID_WIDTH;
+                    grid[ix] = Tile::Sand;
+                    score += 1;
                 }
                 break;
             }
 
-            if !FLOOR && x[1] > maxx[1] {
+            if !FLOOR && ix > max_ix {
                 break 'outer;
             }
         }

@@ -178,7 +178,7 @@ impl Iterator for RectSplitIter {
                 }
             };
 
-            if x5 >= x4 && y5 >= y4 {
+            if x5 > x4 && y5 > y4 {
                 return Some([[x4, y4], [x5, y5]]);
             }
         }

@@ -21,8 +21,7 @@ fn solve(contents: &str) -> (usize, usize) {
     let mut clen = 0;
 
     for line in contents.lines() {
-        let mut coords = line.split(',')
-            .flat_map(|n| n.parse::<usize>());
+        let mut coords = line.split(',').flat_map(|n| n.parse::<usize>());
 
         let x = coords.next().unwrap();
         let y = coords.next().unwrap();
@@ -42,12 +41,24 @@ fn solve(contents: &str) -> (usize, usize) {
         let z = ix / 900;
 
         let mut n = 6;
-        if x != 0 { n -= grid[ix - 1] as usize; }
-        if x != 29 { n -= grid[ix + 1] as usize; }
-        if y != 0 { n -= grid[ix - 30] as usize; }
-        if y != 29 { n -= grid[ix + 30] as usize; }
-        if z != 0 { n -= grid[ix - 900] as usize; }
-        if z != 29 { n -= grid[ix + 900] as usize; }
+        if x != 0 {
+            n -= grid[ix - 1] as usize;
+        }
+        if x != 29 {
+            n -= grid[ix + 1] as usize;
+        }
+        if y != 0 {
+            n -= grid[ix - 30] as usize;
+        }
+        if y != 29 {
+            n -= grid[ix + 30] as usize;
+        }
+        if z != 0 {
+            n -= grid[ix - 900] as usize;
+        }
+        if z != 29 {
+            n -= grid[ix + 900] as usize;
+        }
 
         score1 += n;
     }

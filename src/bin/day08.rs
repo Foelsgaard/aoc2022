@@ -57,7 +57,7 @@ fn solve(contents: &str) -> (usize, usize) {
     let score1 = visible[..n].iter().filter(|b| **b).count() + 4;
     let score2 = scenic[..n].iter().max().unwrap();
 
-    (score1, *score2 as usize)
+    (score1, *score2)
 }
 
 struct DistCalc {

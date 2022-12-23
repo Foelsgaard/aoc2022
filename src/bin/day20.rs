@@ -58,8 +58,8 @@ mod tests {
     fn test_solution() {
         let contents = include_str!("../../input/day20");
 
-        let a = solve::<1, 1>(&contents);
-        let b = solve::<811589153, 10>(&contents);
+        let a = solve::<1, 1>(contents);
+        let b = solve::<811589153, 10>(contents);
 
         assert_eq!(a, 4426);
         assert_eq!(b, 8119137886612);
@@ -76,8 +76,8 @@ mod benches {
         let contents = include_str!("../../input/day20");
 
         bencher.iter(|| {
-            solve::<1, 1>(&contents);
-            solve::<811589153, 10>(&contents);
+            solve::<1, 1>(contents);
+            solve::<811589153, 10>(contents);
         })
     }
 }

@@ -150,8 +150,8 @@ mod tests {
     fn test_solution() {
         let contents = include_str!("../../input/day11");
 
-        let a = solve::<true>(&contents, 20);
-        let b = solve::<false>(&contents, 10000);
+        let a = solve::<true>(contents, 20);
+        let b = solve::<false>(contents, 10000);
 
         assert_eq!(a, 120056);
         assert_eq!(b, 21816744824);
@@ -168,8 +168,8 @@ mod benches {
         let contents = include_str!("../../input/day11");
 
         bencher.iter(|| {
-            solve::<true>(&contents, 20);
-            solve::<false>(&contents, 10000);
+            solve::<true>(contents, 20);
+            solve::<false>(contents, 10000);
         });
     }
 }

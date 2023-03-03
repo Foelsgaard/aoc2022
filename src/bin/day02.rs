@@ -2,26 +2,28 @@
 #[cfg(test)]
 extern crate test;
 
-use aoc2022::get_input;
+use aoc2022::read_input;
 
 fn main() {
-    let contents = get_input();
-    let (a, b) = solve(&contents);
+    let mut buf = [0; 0x10000];
+    let contents = read_input(&mut buf);
+    let (a, b) = solve(contents);
 
-    println!("02a: {}", a);
-    println!("02b: {}", b);
+    println!("02a: {a}");
+    println!("02b: {b}");
 }
 
 fn solve(contents: &str) -> (usize, usize) {
+    let bytes = contents.as_bytes();
+    let n = bytes.len();
     let mut score1 = 0;
     let mut score2 = 0;
 
-    for line in contents.lines() {
-        let mut cs = line.chars();
+    let mut i = 0;
 
-        let c1 = cs.next().unwrap();
-        cs.next();
-        let c2 = cs.next().unwrap();
+    while i < n {
+        let c1 = bytes[i] as char;
+        let c2 = bytes[i + 2] as char;
 
         let (s1, s2) = match (c1, c2) {
             ('A', 'X') => (4, 3),
@@ -38,6 +40,8 @@ fn solve(contents: &str) -> (usize, usize) {
 
         score1 += s1;
         score2 += s2;
+
+        i += 4;
     }
 
     (score1, score2)

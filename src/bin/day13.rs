@@ -11,8 +11,8 @@ fn main() {
 
     let (a, b) = solve(&contents);
 
-    println!("13a: {}", a);
-    println!("13b: {}", b);
+    println!("13a: {a}");
+    println!("13b: {b}");
 }
 
 fn solve(contents: &str) -> (usize, usize) {
@@ -129,7 +129,7 @@ impl<I: Iterator<Item = char>> Iterator for Tokenizer<I> {
                 Some(Int(n))
             }
             None => None,
-            ch => panic!("{:?}", ch),
+            ch => panic!("{ch:?}"),
         }
     }
 }

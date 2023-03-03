@@ -10,8 +10,8 @@ fn main() {
     let a = solve(&contents, 4);
     let b = solve(&contents, 14);
 
-    println!("06a: {}", a);
-    println!("06b: {}", b);
+    println!("06a: {a}");
+    println!("06b: {b}");
 }
 
 fn solve(contents: &str, marker_size: usize) -> usize {

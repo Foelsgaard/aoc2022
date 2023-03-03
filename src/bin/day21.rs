@@ -9,8 +9,8 @@ fn main() {
 
     let (a, b) = solve(&contents);
 
-    println!("21a: {}", a);
-    println!("21b: {}", b);
+    println!("21a: {a}");
+    println!("21b: {b}");
 }
 
 #[derive(Clone, Copy)]

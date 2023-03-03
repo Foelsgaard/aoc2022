@@ -10,8 +10,8 @@ fn main() {
     let a = solve::<false>(&contents);
     let b = solve::<true>(&contents);
 
-    println!("14a: {}", a);
-    println!("14b: {}", b);
+    println!("14a: {a}");
+    println!("14b: {b}");
 }
 
 const GRID_WIDTH: usize = 0x200;

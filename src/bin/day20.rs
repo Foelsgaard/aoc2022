@@ -10,8 +10,8 @@ fn main() {
     let a = solve::<1, 1>(&contents);
     let b = solve::<811589153, 10>(&contents);
 
-    println!("20a: {}", a);
-    println!("20b: {}", b);
+    println!("20a: {a}");
+    println!("20b: {b}");
 }
 
 fn solve<const DEC: i64, const ITER: usize>(contents: &str) -> i64 {

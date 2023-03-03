@@ -10,8 +10,8 @@ fn main() {
 
     let (a, b) = solve(&contents, &mut buf);
 
-    println!("10a: {}", a);
-    println!("10b: {}", b);
+    println!("10a: {a}");
+    println!("10b: {b}");
 }
 
 fn solve<'a>(contents: &str, out_buf: &'a mut [u8]) -> (isize, &'a str) {
@@ -73,7 +73,7 @@ fn solve<'a>(contents: &str, out_buf: &'a mut [u8]) -> (isize, &'a str) {
             0b011110000100010001000100001111 => 'Z',
             // TODO(jfo): Add more letters
             _ => {
-                panic!("{}: {:b}", i, letter);
+                panic!("{i}: {letter:b}");
             }
         };
 

@@ -9,8 +9,8 @@ fn main() {
 
     let (a, b) = solve(&contents);
 
-    println!("18a: {}", a);
-    println!("18b: {}", b);
+    println!("18a: {a}");
+    println!("18b: {b}");
 }
 
 const GRID_SIZE: usize = 30 * 30 * 30;

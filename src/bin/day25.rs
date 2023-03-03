@@ -11,7 +11,7 @@ fn main() {
 
     let a = solve(&contents);
 
-    println!("25a: {}", a);
+    println!("25a: {a}");
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

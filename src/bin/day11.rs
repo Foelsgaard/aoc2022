@@ -10,8 +10,8 @@ fn main() {
     let a = solve::<true>(&contents, 20);
     let b = solve::<false>(&contents, 10000);
 
-    println!("11a: {}", a);
-    println!("11b: {}", b);
+    println!("11a: {a}");
+    println!("11b: {b}");
 }
 
 #[derive(Clone, Copy)]

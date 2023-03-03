@@ -9,10 +9,10 @@ fn main() {
     let buffer = &mut [0; 0x10];
 
     let a = solve(false, &contents, buffer);
-    println!("05a: {}", a);
+    println!("05a: {a}");
 
     let b = solve(true, &contents, buffer);
-    println!("05b: {}", b);
+    println!("05b: {b}");
 }
 
 fn solve<'a>(multi_move: bool, contents: &str, buffer: &'a mut [u8]) -> &'a str {

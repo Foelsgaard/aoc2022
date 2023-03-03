@@ -10,8 +10,8 @@ fn main() {
     let a = solve(&contents, 2);
     let b = solve(&contents, 10);
 
-    println!("09a: {}", a);
-    println!("09b: {}", b);
+    println!("09a: {a}");
+    println!("09b: {b}");
 }
 
 fn solve(contents: &str, rope_length: usize) -> usize {

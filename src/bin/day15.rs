@@ -9,8 +9,8 @@ fn main() {
 
     let (a, b) = solve(&contents);
 
-    println!("15a: {}", a);
-    println!("15b: {}", b);
+    println!("15a: {a}");
+    println!("15b: {b}");
 }
 
 const BUF_SIZE: usize = 0x20;

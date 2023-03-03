@@ -9,8 +9,8 @@ fn main() {
 
     let (a, b) = solve(&contents);
 
-    println!("07a: {}", a);
-    println!("07b: {}", b);
+    println!("07a: {a}");
+    println!("07b: {b}");
 }
 
 fn solve(contents: &str) -> (usize, usize) {

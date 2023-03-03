@@ -10,8 +10,8 @@ fn main() {
 
     let (a, b) = solve(&contents);
 
-    println!("17a: {}", a);
-    println!("17b: {}", b);
+    println!("17a: {a}");
+    println!("17b: {b}");
 }
 
 struct Solver<'a> {

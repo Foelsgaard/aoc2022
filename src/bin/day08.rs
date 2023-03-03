@@ -9,8 +9,8 @@ fn main() {
 
     let (a, b) = solve(&contents);
 
-    println!("08a: {}", a);
-    println!("08b: {}", b);
+    println!("08a: {a}");
+    println!("08b: {b}");
 }
 
 fn solve(contents: &str) -> (usize, usize) {
@@ -39,7 +39,6 @@ fn solve(contents: &str) -> (usize, usize) {
         let row_iter = grid[a..b].iter().copied();
 
         let col_iter = (0..grid_width)
-            .into_iter()
             .map(|i| grid[i * grid_width + j]);
 
         calc.distances(row_iter, |k, d, v| {
